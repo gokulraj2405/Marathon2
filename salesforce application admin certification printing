@@ -1,0 +1,75 @@
+package marathon2;
+
+import java.security.interfaces.RSAMultiPrimePrivateCrtKey;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
+
+import io.github.sukgu.Shadow;
+
+public class SalesForceAdmistration {
+
+	public static void main(String[] args) {
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--disable-notifications");
+
+		ChromeDriver driver = new ChromeDriver();
+		driver.get("https://login.salesforce.com/");
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+
+		WebElement username = driver.findElement(By.id("username"));
+		username.sendKeys("hari.radhakrishnan@qeagle.com");
+
+		WebElement password = driver.findElement(By.id("password"));
+		password.sendKeys("Leaf@1234");
+
+		WebElement loginbutton = driver.findElement(By.id("Login"));
+		loginbutton.click();
+
+		String firstwindow = driver.getWindowHandle();
+		System.out.println(driver.getTitle());
+		WebElement mobilepublisher = driver.findElement(By.xpath("//span[text()='Learn More']")); // //button[text()='Confirm']
+		mobilepublisher.click();
+
+		Set<String> newwindows = driver.getWindowHandles();
+		List<String> lstWindow = new ArrayList<String>(newwindows);
+		driver.switchTo().window(lstWindow.get(1));
+		driver.findElement(By.xpath("//button[text()='Confirm']")).click();
+
+		Shadow dom = new Shadow(driver);
+
+		WebElement learning = dom.findElementByXPath("//span[contains(text(),'Learning')]");
+		learning.click();
+
+		WebElement trailhead = dom.findElementByXPath("//span[contains(text(),'Learning on Trailhead')]");
+		Actions builder = new Actions(driver);
+		builder.moveToElement(trailhead).perform();
+
+		WebElement certification = dom.findElementByXPath("//a[text()='Salesforce Certification']");
+		Actions builder1 = new Actions(driver);
+		builder1.scrollToElement(certification).click(certification).perform();
+
+		WebElement firstcertificate = driver.findElement(By.xpath("//a[text()='Administrator']"));
+		firstcertificate.click();
+		System.out.println(driver.getTitle());
+		List<WebElement> certificate = driver.findElements(By.xpath("//div[@class='credentials-card_title']"));
+
+		for (WebElement webElement : certificate) {
+
+			String text = webElement.getText();
+
+			System.out.println(text);
+
+		}
+
+	}
+}
